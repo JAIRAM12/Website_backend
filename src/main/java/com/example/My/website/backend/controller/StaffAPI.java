@@ -56,7 +56,6 @@ public class StaffAPI {
     private final StaffService staffService;
 
     @PostMapping
-//    @PostMapping
     public ResponseEntity<String> addFaculty(@RequestBody Staffdto staffdto) {
         try {
             MongoStaff saved = staffService.AddStaff(staffdto);
