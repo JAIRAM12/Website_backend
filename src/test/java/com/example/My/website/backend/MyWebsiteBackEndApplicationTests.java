@@ -10,9 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class MyWebsiteBackEndApplicationTests {
 
-    @Autowired
-    private StaffService staffService;
-
     @Test
     void contextLoads() {
     }
