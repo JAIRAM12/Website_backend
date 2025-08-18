@@ -56,15 +56,8 @@ public class StaffAPI {
     private final StaffService staffService;
 
     @PostMapping
-    public ResponseEntity<String> addFaculty(@RequestBody Staffdto staffdto) {
-        try {
-            MongoStaff saved = staffService.AddStaff(staffdto);
-            return ResponseEntity.ok().body("✅ Staff saved successfully with ID: " + saved.getId());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("❌ Invalid Base64 image data");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("❌ Failed to save staff");
-        }
+    public ResponseEntity<MongoStaff> addFaculty(@RequestBody Staffdto staffInfo) {
+        return ResponseEntity.ok(staffService.AddStaff(staffInfo));
     }
 
     @DeleteMapping("/{id}")
