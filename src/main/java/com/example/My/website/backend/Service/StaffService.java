@@ -3,19 +3,32 @@ package com.example.My.website.backend.Service;
 import com.example.My.website.backend.Dto.Staffdto;
 import com.example.My.website.backend.Model.MongoStaff;
 import com.example.My.website.backend.Repo.FacultyRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.Binary;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StaffService {
-    private final FacultyRepository repository;
-    public StaffService(FacultyRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private FacultyRepository repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     public MongoStaff AddStaff(Staffdto staffInfo) {
         // Check if staffId already exists
         Optional<MongoStaff> existingData = repository.findByStaffId(staffInfo.getStaffId());
@@ -28,10 +41,14 @@ public class StaffService {
         faculty.setName(staffInfo.getName());
         faculty.setStaffId(staffInfo.getStaffId());
         faculty.setEmail(staffInfo.getEmail());
-        faculty.setPass(staffInfo.getPass());
+        faculty.setPassword(passwordEncoder.encode(staffInfo.getPassword()));
         faculty.setDepartment(staffInfo.getDepartment());
         faculty.setEducation(staffInfo.getEducation());
         faculty.setPhone(staffInfo.getPhone());
+        faculty.setAddress(staffInfo.getAddress());
+        faculty.setPosition(staffInfo.getPosition());
+//        faculty.setRole("Staff");
+        faculty.setSkills(staffInfo.getSkills());
 
         // Decode Base64 image if provided
         if (staffInfo.getImage() != null && !staffInfo.getImage().isEmpty()) {
@@ -52,10 +69,38 @@ public class StaffService {
     }
 
 
-    public List<MongoStaff> getStaff(){
+    public List<MongoStaff> getStaff(JsonNode data) {
+        try {
+//            JsonNode node = objectMapper.readTree(jsonData);
+            Query query = new Query();
+
+            // Iterate over all fields dynamically
+            Iterator<Map.Entry<String, JsonNode>> fields = data.fields();
+            while (fields.hasNext()) {
+                Map.Entry<String, JsonNode> entry = fields.next();
+                String key = entry.getKey();
+                String value = entry.getValue().asText();
+
+                if (!value.isEmpty()) { // ignore empty fields
+                    query.addCriteria(Criteria.where(key).is(value));
+                }
+            }
+
+            return mongoTemplate.find(query, MongoStaff.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of(); // return empty list on error
+        }
+    }
+
+    public List<MongoStaff> getAllStaff() {
         return repository.findAll();
     }
 
+    public MongoStaff getStaffById(String id) {
+        return repository.findById(id).orElse(null);
+    }
 
 
 }

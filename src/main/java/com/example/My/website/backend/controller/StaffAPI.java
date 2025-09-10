@@ -1,59 +1,25 @@
-//package controller;
-//
-//import Dto.com.example.my.website.backend.Staffdto;
-//import Model.com.example.my.website.backend.MongoStaff;
-//import Repo.com.example.my.website.backend.FacultyRepository;
-//import Service.com.example.my.website.backend.StaffService;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.web.bind.annotation.*;
-//
-//@RestController
-//@RequestMapping("/api/faculty")
-//@RequiredArgsConstructor
-//public class StaffAPI {
-//
-//    private final FacultyRepository facultyRepository;
-//    private final StaffService staffService;
-//
-////    @GetMapping
-////    public List<StaffInfo> getAll() {
-////        return facultyRepository.findAll();
-////    }
-//
-//    @PostMapping
-//    public MongoStaff create(@RequestBody Staffdto faculty) {
-//        return staffService.AddStaff(faculty);
-//    }
-//
-////    @PutMapping("/{id}")
-////    public StaffInfo update(@PathVariable String id, @RequestBody StaffInfo faculty) {
-////        faculty.setId(id);
-////        return facultyRepository.save(faculty);
-////    }
-//
-//    @DeleteMapping("/{id}")
-//    public void delete(@PathVariable String id) {
-//        facultyRepository.deleteById(id);
-//    }
-//}
-
-//package com.example.My.website.Back_end.controller;
 package com.example.My.website.backend.controller;
 import com.example.My.website.backend.Dto.Staffdto;
 import com.example.My.website.backend.Model.MongoStaff;
+import com.example.My.website.backend.Model.MongoStudent;
 import com.example.My.website.backend.Repo.FacultyRepository;
 import com.example.My.website.backend.Service.StaffService;
+import com.example.My.website.backend.Service.StudentService;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/faculty")
 @RequiredArgsConstructor
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 public class StaffAPI {
     private final FacultyRepository facultyRepository;
     private final StaffService staffService;
+    private final StudentService studentService;
 
     @PostMapping
     public ResponseEntity<MongoStaff> addFaculty(@RequestBody Staffdto staffInfo) {
@@ -64,5 +30,32 @@ public class StaffAPI {
     public void delete(@PathVariable String id) {
         facultyRepository.deleteById(id);
     }
+
+
+    @PostMapping("/Faculties")
+    public ResponseEntity<List<MongoStaff>> fetchFaculty(@RequestBody JsonNode data) {
+        List<MongoStaff> staffList = staffService.getStaff(data);
+        return ResponseEntity.ok(staffList);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<MongoStaff>> getAllStaff() {
+        List<MongoStaff> staffList = staffService.getAllStaff();
+        return ResponseEntity.ok(staffList);
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<MongoStaff> getStaff(@PathVariable String id) {
+        MongoStaff staffInfo = staffService.getStaffById(id);
+        return ResponseEntity.ok(staffInfo);
+    }
+
+    @PostMapping("/search/meenties")
+    public ResponseEntity<List<MongoStudent>> getMeenties(@RequestBody JsonNode data){
+        List<MongoStudent> Meenties = studentService.searchStudent(data);
+        return ResponseEntity.ok(Meenties);
+    }
+
+
 }
 
