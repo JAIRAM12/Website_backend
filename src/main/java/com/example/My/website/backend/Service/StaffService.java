@@ -4,9 +4,8 @@ import com.example.My.website.backend.Dto.Staffdto;
 import com.example.My.website.backend.Model.MongoStaff;
 import com.example.My.website.backend.Repo.FacultyRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.bson.types.Binary;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -16,18 +15,14 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class StaffService {
-    @Autowired
-    private FacultyRepository repository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final FacultyRepository repository;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
 
     public MongoStaff AddStaff(Staffdto staffInfo) {
         // Check if staffId already exists

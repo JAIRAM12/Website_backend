@@ -1,6 +1,5 @@
 package com.example.My.website.backend.Repo;
 
-import com.example.My.website.backend.Model.MongoStaff;
 import com.example.My.website.backend.Model.MongoStudent;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;

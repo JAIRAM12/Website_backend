@@ -21,7 +21,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequestMapping()
-@CrossOrigin// Add this for CORS
+@CrossOrigin
 @RequiredArgsConstructor
 public class AuthController {
 

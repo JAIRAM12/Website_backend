@@ -10,7 +10,6 @@ import java.util.List;
 @Setter
 @Data
 public class Staffdto {
-//    private String id;
     private String name;
     private String department;
     private String email;

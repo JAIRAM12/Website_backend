@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @Data
 public class Studentdto {
-
     private String name;
     private String phone;
     private String department;

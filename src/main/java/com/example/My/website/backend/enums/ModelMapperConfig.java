@@ -1,7 +1,5 @@
 package com.example.My.website.backend.enums;
 
-//package com.example.My.website.backend.config;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
