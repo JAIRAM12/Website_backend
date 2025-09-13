@@ -40,7 +40,7 @@ public class MongoUserDetailsService implements UserDetailsService {
         throw new UsernameNotFoundException("User not found with identifier: " + identifier);
     }
 
-    public Map<String, Object> findUserDetails(String identifier, String jwtToken) {
+    public Map<String, Object> findUserDetails(String identifier) {
         UserDetails userInfo = loadUserByUsername(identifier);
 
         String role = userInfo.getAuthorities().stream()
@@ -57,7 +57,6 @@ public class MongoUserDetailsService implements UserDetailsService {
         }
 
         return Map.of(
-                "token", jwtToken,
                 "user", Map.of(
                         "id", userInfo.getUsername(),
                         "role", role,

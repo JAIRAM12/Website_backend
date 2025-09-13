@@ -94,6 +94,7 @@ public class StaffService {
     }
 
     public MongoStaff getStaffById(String id) {
+        System.out.println(repository.findById(id).orElse(null));
         return repository.findById(id).orElse(null);
     }
 
