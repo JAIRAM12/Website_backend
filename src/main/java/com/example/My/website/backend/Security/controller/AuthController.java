@@ -36,6 +36,17 @@ public class AuthController {
         if ("Fail".equals(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
-        return ResponseEntity.ok(mongoUserDetailsService.findUserDetails(loginRequest.getUsername(), token));
+        return ResponseEntity.ok(Map.of(
+                "token", token));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getDetials(@PathVariable String id){
+        if(id.isEmpty()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
+        }
+
+        return ResponseEntity.ok(mongoUserDetailsService.findUserDetails(id));
+
     }
 }
