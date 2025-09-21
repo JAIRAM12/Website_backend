@@ -1,27 +1,24 @@
 package com.example.My.website.backend.Security.controller;
 
 import com.example.My.website.backend.Dto.LoginRequest;
-import com.example.My.website.backend.Repo.FacultyRepository;
-import com.example.My.website.backend.Repo.StudentRepository;
-//import io.jsonwebtoken.Jwts;
-//import io.jsonwebtoken.security.Keys;
+import com.example.My.website.backend.Model.MongoPage;
 import com.example.My.website.backend.Security.service.AuthService;
 import com.example.My.website.backend.Security.service.MongoUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @Slf4j
 @Component
 @RequestMapping()
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -40,13 +37,20 @@ public class AuthController {
                 "token", token));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getDetials(@PathVariable String id){
-        if(id.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
+    @PostMapping("/{id}")
+    public ResponseEntity<?> getUser(@PathVariable String id) {
+        if (id.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid ID"));
         }
 
-        return ResponseEntity.ok(mongoUserDetailsService.findUserDetails(id));
+        return mongoUserDetailsService.getUserDetailsById(id)
+                .<ResponseEntity<?>>map(ResponseEntity::ok) // specify type to avoid mismatch
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found")));
+    }
 
+    @GetMapping("/getPermission")
+    public ResponseEntity<List<MongoPage>> getModels(){
+        return ResponseEntity.ok(authService.getPermission());
     }
 }

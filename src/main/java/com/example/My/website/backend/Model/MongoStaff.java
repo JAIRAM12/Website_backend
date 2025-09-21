@@ -29,13 +29,13 @@ public class MongoStaff implements UserDetails {
     private String phone;
     private List<String> education;
     private String staffId;
-    private Binary staffImage;
+    private Binary image;
     @JsonIgnore
     private String password;
     private List<String> skills;
     private String address;
     private String position;
-//    private String role;
+    private String role;
 
     // UserDetails interface implementation
     @Override

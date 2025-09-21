@@ -36,13 +36,13 @@ public class StaffService {
         faculty.setName(staffInfo.getName());
         faculty.setStaffId(staffInfo.getStaffId());
         faculty.setEmail(staffInfo.getEmail());
-        faculty.setPassword(passwordEncoder.encode(staffInfo.getPassword()));
+        faculty.setPassword(passwordEncoder.encode("12345"));
         faculty.setDepartment(staffInfo.getDepartment());
         faculty.setEducation(staffInfo.getEducation());
         faculty.setPhone(staffInfo.getPhone());
         faculty.setAddress(staffInfo.getAddress());
         faculty.setPosition(staffInfo.getPosition());
-//        faculty.setRole("Staff");
+        faculty.setRole("Staff");
         faculty.setSkills(staffInfo.getSkills());
 
         // Decode Base64 image if provided
@@ -53,7 +53,7 @@ public class StaffService {
                     base64Image = base64Image.split(",")[1];
                 }
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
-                faculty.setStaffImage(new Binary(imageBytes));
+                faculty.setImage(new Binary(imageBytes));
             } catch (IllegalArgumentException e) {
                 throw new RuntimeException("Invalid Base64 image data", e);
             }

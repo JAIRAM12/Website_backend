@@ -37,7 +37,8 @@ public class StudentService {
     public MongoStudent SaveStudent(Studentdto data) {
         MongoStudent student = modelMapper.map(data, MongoStudent.class);
         student.setId(null);
-        String encodedPassword = passwordEncoder.encode(data.getPassword());
+        student.setRole("Student");
+        String encodedPassword = passwordEncoder.encode("12345");
         student.setPassword(encodedPassword);
         return repository.save(student);
     }

@@ -29,7 +29,7 @@ public class MongoStudent implements UserDetails {
     private String gender;
     private String createdBy;
     private String password;
-//    private String role;
+    private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
