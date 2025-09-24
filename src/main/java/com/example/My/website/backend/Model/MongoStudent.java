@@ -1,10 +1,9 @@
 package com.example.My.website.backend.Model;
 
+
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import net.minidev.json.annotate.JsonIgnore;
-import org.bson.types.Binary;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,62 +15,54 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
-@Document(collection = "Staff database")
+@Document(collection = "Student database")
 @Getter
 @Setter
-public class MongoStaff implements UserDetails {
-
+public class MongoStudent implements UserDetails {
     @Id
     private String id;
     private String name;
-    private String department;
-    private String email;
     private String phone;
-    private List<String> education;
-    private String staffId;
-    private Binary image;
-    @JsonIgnore
+    private String department;
+    private String studentId;
+    private int year;
+    private String gender;
+    private String createdBy;
     private String password;
-    private List<String> skills;
-    private String address;
-    private String position;
     private String role;
 
-    // UserDetails interface implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_STAFF"));
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_STUDENT"));
     }
 
     @Override
-    @JsonIgnore
     public String getPassword() {
-        return password; // Use the 'pass' field as password
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return staffId; // Use staffId as the username for authentication
+        return studentId; // Use studentId as the username
     }
 
-    // The following methods can return default values since you might not need these features
     @Override
     public boolean isAccountNonExpired() {
-        return true; // Account never expires
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Account is never locked
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // Credentials never expire
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return true; // Account is always enabled
+        return true;
     }
 }
