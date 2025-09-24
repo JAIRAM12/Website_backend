@@ -122,6 +122,7 @@
 
 
     <build>
+        <finalName>CollageBackend</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
