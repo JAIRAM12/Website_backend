@@ -18,8 +18,9 @@ import java.util.Map;
 @Slf4j
 @Component
 @RequestMapping()
-@CrossOrigin(origins = "http://localhost:3000")
+//@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final MongoUserDetailsService mongoUserDetailsService;
