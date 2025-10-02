@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/student")
 @RequiredArgsConstructor
 //@CrossOrigin
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class StudentAPI {
 
     private final StudentService studentService;

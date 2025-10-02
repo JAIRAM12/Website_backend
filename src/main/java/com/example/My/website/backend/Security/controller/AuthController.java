@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping()
 //@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final MongoUserDetailsService mongoUserDetailsService;
