@@ -17,10 +17,8 @@ import java.util.Map;
 @RestController
 @Slf4j
 @Component
-@RequestMapping()
-//@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final MongoUserDetailsService mongoUserDetailsService;

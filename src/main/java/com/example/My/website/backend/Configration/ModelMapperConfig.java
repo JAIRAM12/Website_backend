@@ -1,4 +1,4 @@
-package com.example.My.website.backend.enums;
+package com.example.My.website.backend.Configration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

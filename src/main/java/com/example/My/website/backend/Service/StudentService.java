@@ -4,8 +4,8 @@ import com.example.My.website.backend.Dto.Studentdto;
 import com.example.My.website.backend.Model.MongoStudent;
 import com.example.My.website.backend.Repo.StudentRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,11 +21,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StudentService {
 
     private final StudentRepository repository;
-
-    private final ObjectMapper objectMapper;
 
     private final MongoTemplate mongoTemplate;
 
@@ -45,36 +44,30 @@ public class StudentService {
 
     public List<?> AddStudents(List<Studentdto> data) {
         try {
-            // If it's a single object wrapped in array
             if (data.size() == 1) {
-                MongoStudent savedStudent = SaveStudent(data.get(0)); // ✅ Fixed
+                MongoStudent savedStudent = SaveStudent(data.getFirst());
                 return Collections.singletonList(savedStudent);
             }
 
-            // If it's multiple objects
-            List<MongoStudent> savedStudents = data.stream()
-                    .map(this::SaveStudent) // ✅ Fixed
+            return data.stream()
+                    .map(this::SaveStudent)
                     .collect(Collectors.toList());
-
-            return savedStudents; // ✅ Added return
         } catch (Exception e) {
+            log.error("Error processing student data: {}", e.getMessage());
             return Collections.singletonList("Error processing student data: " + e.getMessage());
         }
     }
 
     public List<MongoStudent> searchStudent(JsonNode data){
             try {
-//            JsonNode node = objectMapper.readTree(jsonData);
-                Query query = new Query();
-
-                // Iterate over all fields dynamically
+            Query query = new Query();
                 Iterator<Map.Entry<String, JsonNode>> fields = data.fields();
                 while (fields.hasNext()) {
                     Map.Entry<String, JsonNode> entry = fields.next();
                     String key = entry.getKey();
                     String value = entry.getValue().asText();
 
-                    if (!value.isEmpty()) { // ignore empty fields
+                    if (!value.isEmpty()) {
                         query.addCriteria(Criteria.where(key).is(value));
                     }
                 }
@@ -83,7 +76,8 @@ public class StudentService {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return List.of(); // return empty list on error
+                log.info("Studuent database is empty {}", data);
+                return List.of();
             }
     }
 

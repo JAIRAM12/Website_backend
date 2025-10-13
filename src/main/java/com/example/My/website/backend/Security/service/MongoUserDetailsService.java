@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j // Add this annotation
+@Slf4j
 public class MongoUserDetailsService implements UserDetailsService {
 
     private final FacultyRepository staffRepository;
@@ -34,25 +34,19 @@ public class MongoUserDetailsService implements UserDetailsService {
 
         Optional<MongoAdmin> adminOptional = adminRepo.findByAdminId(identifier);
         if (adminOptional.isPresent()) {
-            log.info("Found ADMIN user: {}", identifier);
             return adminOptional.get();
         }
 
-        // 2️⃣ Try Staff
         Optional<MongoStaff> staffOptional = staffRepository.findByStaffId(identifier);
         if (staffOptional.isPresent()) {
-            log.info("Found STAFF user: {}", identifier);
             return staffOptional.get();
         }
 
-        // 3️⃣ Try Student
         Optional<MongoStudent> studentOptional = studentRepository.findByStudentId(identifier);
         if (studentOptional.isPresent()) {
-            log.info("Found STUDENT user: {}", identifier);
             return studentOptional.get();
         }
 
-        // 4️⃣ Not found
         log.error("User not found with identifier: {}", identifier);
         throw new UsernameNotFoundException("User not found with identifier: " + identifier);
     }

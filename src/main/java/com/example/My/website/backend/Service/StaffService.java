@@ -5,6 +5,7 @@ import com.example.My.website.backend.Model.MongoStaff;
 import com.example.My.website.backend.Repo.FacultyRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -16,6 +17,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class StaffService {
 
     private final FacultyRepository repository;
@@ -25,13 +27,12 @@ public class StaffService {
     private final MongoTemplate mongoTemplate;
 
     public MongoStaff AddStaff(Staffdto staffInfo) {
-        // Check if staffId already exists
         Optional<MongoStaff> existingData = repository.findByStaffId(staffInfo.getStaffId());
         if (existingData.isPresent()) {
+            log.error("This id already exists: {}", staffInfo.getStaffId());
             throw new RuntimeException("This id already exists: " + staffInfo.getStaffId());
         }
 
-        // Map DTO to entity
         MongoStaff faculty = new MongoStaff();
         faculty.setName(staffInfo.getName());
         faculty.setStaffId(staffInfo.getStaffId());
@@ -45,7 +46,6 @@ public class StaffService {
         faculty.setRole("Staff");
         faculty.setSkills(staffInfo.getSkills());
 
-        // Decode Base64 image if provided
         if (staffInfo.getImage() != null && !staffInfo.getImage().isEmpty()) {
             try {
                 String base64Image = staffInfo.getImage();
@@ -55,21 +55,18 @@ public class StaffService {
                 byte[] imageBytes = Base64.getDecoder().decode(base64Image);
                 faculty.setImage(new Binary(imageBytes));
             } catch (IllegalArgumentException e) {
+                log.error("Invalid Base64 image data", e);
                 throw new RuntimeException("Invalid Base64 image data", e);
             }
         }
 
-        // Save and return
         return repository.save(faculty);
     }
 
 
     public List<MongoStaff> getStaff(JsonNode data) {
         try {
-//            JsonNode node = objectMapper.readTree(jsonData);
             Query query = new Query();
-
-            // Iterate over all fields dynamically
             Iterator<Map.Entry<String, JsonNode>> fields = data.fields();
             while (fields.hasNext()) {
                 Map.Entry<String, JsonNode> entry = fields.next();
@@ -85,7 +82,8 @@ public class StaffService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return List.of(); // return empty list on error
+            log.error("Staff database is empty");
+            return List.of();
         }
     }
 
@@ -94,7 +92,6 @@ public class StaffService {
     }
 
     public MongoStaff getStaffById(String id) {
-        System.out.println(repository.findById(id).orElse(null));
         return repository.findById(id).orElse(null);
     }
 

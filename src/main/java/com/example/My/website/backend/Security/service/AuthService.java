@@ -34,7 +34,7 @@ public class AuthService {
             Authentication authentication = authManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
-                            request.getPassword() // raw password; Spring will compare using PasswordEncoder
+                            request.getPassword()
                     )
             );
 
@@ -61,7 +61,6 @@ public class AuthService {
                 log.info("User is ADMIN with ID: {}", mongoId);
             }
 
-            // Generate JWT token
             String token = jwtService.generateToken(userDetails, mongoId, role, avatarUrl);
             return token;
 
