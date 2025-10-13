@@ -1,4 +1,4 @@
-package com.example.My.website.backend.enums;
+package com.example.My.website.backend.Configration;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

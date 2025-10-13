@@ -32,7 +32,7 @@ private final JWTService jwtService;
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization"); // ✅ fixed header
+        String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
 

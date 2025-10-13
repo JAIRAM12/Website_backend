@@ -15,8 +15,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/faculty")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
-//@CrossOrigin(origins = "*")
 public class StaffAPI {
     private final FacultyRepository facultyRepository;
     private final StaffService staffService;

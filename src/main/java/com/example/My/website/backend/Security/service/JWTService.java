@@ -18,26 +18,23 @@ public class JWTService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    // 🔑 Decode the secret key
     private Key getKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    // ✅ Generate token with extra claims
     public String generateToken(UserDetails userDetails, String mongoId, String role, String avatarUrl) {
         return Jwts.builder()
-                .claim("id", mongoId)       // Mongo _id
-                .claim("role", role)        // Role
-                .claim("avatar", avatarUrl) // Avatar/profile pic
-                .subject(userDetails.getUsername()) // username = staffId/email/etc.
+                .claim("id", mongoId)
+                .claim("role", role)
+                .claim("avatar", avatarUrl)
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2)) // 2 hours
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))
                 .signWith(getKey())
                 .compact();
     }
 
-    // ✅ Extract any claim with a function
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parser()
                 .setSigningKey(getKey())
@@ -47,33 +44,27 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
-    // ✅ Extract username (subject)
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // ✅ Extract Mongo ID
-    public String extractMongoId(String token) {
-        return extractClaim(token, claims -> claims.get("id", String.class));
-    }
+//    public String extractMongoId(String token) {
+//        return extractClaim(token, claims -> claims.get("id", String.class));
+//    }
 
-    // ✅ Extract Role
-    public String extractRole(String token) {
-        return extractClaim(token, claims -> claims.get("role", String.class));
-    }
+//    public String extractRole(String token) {
+//        return extractClaim(token, claims -> claims.get("role", String.class));
+//    }
 
-    // ✅ Extract Avatar
-    public String extractAvatar(String token) {
-        return extractClaim(token, claims -> claims.get("avatar", String.class));
-    }
+//    public String extractAvatar(String token) {
+//        return extractClaim(token, claims -> claims.get("avatar", String.class));
+//    }
 
-    // ✅ Validate token
     public boolean validateToken(String token, UserDetails userDetails) {
         String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    // ✅ Check expiry
     private boolean isTokenExpired(String token) {
         Date expiration = extractClaim(token, Claims::getExpiration);
         return expiration.before(new Date());

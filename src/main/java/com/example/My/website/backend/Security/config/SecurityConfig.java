@@ -16,8 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Arrays;
-
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity
@@ -33,14 +31,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-//                                .requestMatchers("/**").permitAll()  // Allow all routes temporarily
-//                         .anyRequest().authenticated()
-                        .requestMatchers("/", "/login", "/api/public/**").permitAll()
+                        .requestMatchers( "/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//                .httpBasic(Customizer.withDefaults());
-
         return http.build();
     }
 
